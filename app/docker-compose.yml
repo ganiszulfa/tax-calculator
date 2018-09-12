@@ -1,0 +1,36 @@
+postgres:
+  restart: "no"
+  image: postgres
+  env_file: ../dev.env
+  ports:
+    - "5432:5432"
+  volumes:
+    - ./postgresql/data-main:/var/lib/postgresql/data/
+
+django:
+  restart: "no"
+  build: ./django
+  env_file: ../dev.env
+  user: "1000:1000"
+  expose:
+    - "8000"
+  links:
+    - postgres:postgres
+  volumes:
+    - ./django:/usr/src/app
+  command: ./run_django.sh
+
+nginx:
+  restart: "no"
+  build: ./nginx/
+  ports:
+    - "80:80"
+    - "443:443"
+  volumes:
+    - ./landing_page:/www/landing_page/
+    - ./nginx/letsencrypt:/etc/letsencrypt/
+    - ./nginx/webroot:/var/www/theapp
+  volumes_from:
+    - django
+  links:
+    - django:django

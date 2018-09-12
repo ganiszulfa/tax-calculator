@@ -1,0 +1,10 @@
+<h1>tax calculator</h1>
+<h2>add tax object</h2>
+
+<form action="/" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Submit">
+</form>
+
+<a href="{% url 'view_my_bill' %}">view my bill</a>

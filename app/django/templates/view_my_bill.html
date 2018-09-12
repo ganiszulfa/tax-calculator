@@ -1,0 +1,37 @@
+{% load humanize %}
+<h1>tax calculator</h1>
+<h2>view my bill</h2>
+
+{% if tax_objects %}
+<table >
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Tax Code</th>
+      <th>Amount</th>
+      <th>Tax Amount</th>
+      <th>Total Amount</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for tax_obj in tax_objects %}
+    <tr>
+      <td>{{ tax_obj.name }}</td>
+      <td>{{ tax_obj.tax_code }}</td>
+      <td>{{ tax_obj.amount }}</td>
+      <td>{{ tax_obj.tax_amount }}</td>
+      <td>{{ tax_obj.total_amount }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+total tax: {{ total_tax}} <br>
+total amount: {{ total_amount}} <br>
+grand amount: {{ grand_amount}} <br>
+{% else %}
+<h3>
+  You have no tax object yet..
+</h3>
+{% endif %}
+
+<a href="{% url 'add_tax_object' %}">add tax object</a>
