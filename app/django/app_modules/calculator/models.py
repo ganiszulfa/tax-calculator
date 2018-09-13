@@ -20,5 +20,7 @@ class TaxObject(models.Model):
                 self.tax_amount = 0
             else:
                 self.tax_amount = 0.01 * (self.amount-100)
+        else:
+            return False
         self.total_amount = self.amount + self.tax_amount
         super(TaxObject, self).save(*args, **kwargs)
