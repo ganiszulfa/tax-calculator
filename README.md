@@ -7,10 +7,6 @@ cd ./app
 docker-compose up
 ```
 
-## live demo
-
-http://tax-calculator.ganis.pro
-
 ## api doc
 
 for demo purpose, no authentication required
@@ -44,4 +40,22 @@ curl -X GET /api/tax_object/
 
 ## db structure
 
-TBA
+for demo purpose, no relationship between user table and tax object table
+```
+User (based on django default user model)
+-
+Username PK string 
+Password string 
+
+TaxObject
+-
+Id PK int
+Name int 
+TaxCode int
+Amount int 
+TaxAmount decimal
+TotalAmount decimal
+```
+## live demo
+
+http://tax-calculator.ganis.pro
