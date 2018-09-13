@@ -9,14 +9,18 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.template.response import TemplateResponse
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse, JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 
 # THIRD-PARTY LIBRARY
-
+from rest_framework.renderers import JSONRenderer
+from rest_framework.parsers import JSONParser
 
 # app_core LIBRARY
 from app_core.common import base_decode, base_encode
 from .forms import TaxForm
 from .models import TaxObject
+from .serializers import TaxObjectSerializer
 
 logger = logging.getLogger(__name__)
 
@@ -27,18 +31,7 @@ def index(request):
             name = form.cleaned_data['name']
             tax_code = form.cleaned_data['tax_code']
             amount = form.cleaned_data['amount']
-            if tax_code == 1:
-                tax_amount = 0.1 * amount
-            elif tax_code == 2:
-                tax_amount = 10 + 0.02 * amount
-            elif tax_code == 3:
-                if amount < 100:
-                    tax_amount = 0
-                else:
-                    tax_amount = 0.01 * (amount-100)
-            total_amount = amount + tax_amount
-            TaxObject(name=name, tax_code=tax_code, amount=amount,
-                    tax_amount=tax_amount, total_amount=total_amount).save()
+            TaxObject(name=name, tax_code=tax_code, amount=amount).save()
 
             return HttpResponseRedirect(reverse('view_my_bill', ))
     else:
@@ -62,3 +55,47 @@ def view_my_bill(request):
         'total_amount': total_amount,
         'grand_amount': grand_amount,
         })
+
+@csrf_exempt
+def tax_object_list(request):
+    """
+    List all code tax_objects, or create a new tax_object.
+    """
+    if request.method == 'GET':
+        tax_objects = TaxObject.objects.all()
+        serializer = TaxObjectSerializer(tax_objects, many=True)
+        return JsonResponse(serializer.data, safe=False)
+
+    elif request.method == 'POST':
+        data = JSONParser().parse(request)
+        serializer = TaxObjectSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data, status=201)
+        return JsonResponse(serializer.errors, status=400)
+
+@csrf_exempt
+def tax_object_detail(request, pk):
+    """
+    Retrieve, update or delete a tax_object.
+    """
+    try:
+        tax_object = TaxObject.objects.get(pk=pk)
+    except TaxObject.DoesNotExist:
+        return HttpResponse(status=404)
+
+    if request.method == 'GET':
+        serializer = TaxObjectSerializer(tax_object)
+        return JsonResponse(serializer.data)
+
+    elif request.method == 'PUT':
+        data = JSONParser().parse(request)
+        serializer = TaxObjectSerializer(tax_object, data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data)
+        return JsonResponse(serializer.errors, status=400)
+
+    elif request.method == 'DELETE':
+        tax_object.delete()
+        return HttpResponse(status=204)

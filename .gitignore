@@ -10,4 +10,4 @@ __pycache__
 
 app/nginx/certificate/
 app/nginx/letsencrypt/
-.log
+app/django/djangolog.log

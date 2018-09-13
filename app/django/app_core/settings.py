@@ -31,6 +31,8 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django.contrib.humanize',
 
+    'rest_framework',
+
     'app_modules.calculator',
 ]
 
@@ -146,7 +148,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-LOGIN_REDIRECT_URL = '/dashboard/'
+LOGIN_REDIRECT_URL = '/'
 
 SITE_ID = 1
 
@@ -193,3 +195,9 @@ DEBUG_TOOLBAR_CONFIG = {
 }
 
 handler404 = 'app_modules.landing.views.my404'
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny'
+    ]
+}

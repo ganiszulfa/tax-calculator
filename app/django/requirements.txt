@@ -3,3 +3,7 @@ gunicorn==19.7.1
 psycopg2==2.7.1
 
 django-debug-toolbar
+
+djangorestframework
+markdown
+django-filter
