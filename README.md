@@ -56,6 +56,17 @@ Amount int
 TaxAmount decimal
 TotalAmount decimal
 ```
+
+## how to run the test
+testing the
+- env values
+- tax calculation
+- invalid tax code creation
+
+```
+docker-compose run django ./manage.py test
+```
+
 ## live demo
 
 http://tax-calculator.ganis.pro
