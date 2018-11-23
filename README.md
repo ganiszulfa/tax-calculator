@@ -66,7 +66,3 @@ testing the
 ```
 docker-compose run django ./manage.py test
 ```
-
-## live demo
-
-http://tax-calculator.ganis.pro
